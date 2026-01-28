@@ -116,7 +116,9 @@ class SpaceExpedition
     {
         for (int i = 1; i < count; i++)
         {
-            string key = decodedNames[i];
+            string keyDecoded = decodedNames[i];
+            string keyEncoded = encodedNames[i];
+            
             int j = i - 1;
 
             while (j >= 0 && string.Compare(decodedNames[j], key) > 0)
@@ -125,7 +127,8 @@ class SpaceExpedition
                 j--;
             }
 
-            decodedNames[j + 1] = key;
+            decodedNames[j + 1] = keyDecoded;
+            encodedNames[j + 1] = keyEncoded;
         }
     }
 }
