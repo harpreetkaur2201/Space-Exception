@@ -26,6 +26,10 @@ class SpaceExpedition
         LoadVault();
         DecodeAllNames();
         DisplayDecodedNames();
+        SortArtifacts(); 
+
+        Console.WriteLine("\nAfter Sorting:");
+        DisplayDecodedNames();
     }
     static void LoadVault()
     {
