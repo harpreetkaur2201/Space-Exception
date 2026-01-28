@@ -6,6 +6,7 @@ class SpaceExpedition
     
     static string[] encodedNames = new string[80];
     static string[] decodedNames = new string[80];
+    static string[] fullData = new string[80];
     static int count = 0;
 
    
@@ -24,11 +25,8 @@ class SpaceExpedition
     {
         LoadVault();
         DecodeAllNames();
-        DisplayDecodedNames();
-        SortArtifacts(); 
-
-        Console.WriteLine("\nAfter Sorting:");
-        DisplayDecodedNames();
+        SortArtifacts();
+        ShowMenu();
     }
     static void LoadVault()
     {
@@ -159,24 +157,102 @@ class SpaceExpedition
     }
 
 
-    static void InsertArtifacts(string newEncoded, string newDecoded)
+    static void InsertArtifact(string newEncoded, string newDecoded, string newFullLine)
     {
         int position = 0;
 
-        while (position < count && string.Compare(decodedNames[position], newDecoded) <0)
+        while (position < count && string.Compare(decodedNames[position], newDecoded) < 0)
         {
             position++;
         }
 
-        for (int i = count; i > position; i-- )
+        for (int i = count; i > position; i--)
         {
             encodedNames[i] = encodedNames[i - 1];
             decodedNames[i] = decodedNames[i - 1];
+            fullData[i] = fullData[i - 1]; // shift full line too
         }
 
         encodedNames[position] = newEncoded;
         decodedNames[position] = newDecoded;
+        fullData[position] = newFullLine; // store full artifact line
 
         count++;
     }
+
+    static void ShowMenu()
+    {
+        bool running = true;
+
+        while (running)
+        {
+            Console.WriteLine("\n--- Galactic Vault Menu ---");
+            Console.WriteLine("1. Add Artifact");
+            Console.WriteLine("2. View Inventory");
+            Console.WriteLine("3. Save and Exit");
+            Console.Write("Choose an option: ");
+
+            string choice = Console.ReadLine().Trim();
+
+            if (choice == "1")
+            {
+                AddArtifactFromUser();
+            }
+            else if (choice == "2")
+            {
+                DisplayDecodedNames();
+            }
+            else if (choice == "3")
+            {
+                SaveAndExit();
+                running = false;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Try again.");
+            }
+        }
+    }
+    static void AddArtifactFromUser()
+    {
+        Console.Write("Enter encoded artifact name: ");
+        string encoded = Console.ReadLine().Trim();
+
+        // Ask for full line (all fields) so we can save it later
+        Console.Write("Enter full artifact line (encoded|planet|date|location|desc): ");
+        string fullLine = Console.ReadLine().Trim();
+
+        string decoded = DecodeName(encoded);
+
+        int index = BinarySearch(decoded);
+
+        if (index != -1)
+        {
+            Console.WriteLine("Artifact already exists in the vault.");
+            return;
+        }
+
+        InsertArtifact(encoded, decoded, fullLine); // note full line added
+        Console.WriteLine("Artifact added successfully.");
+    }
+    static void SaveAndExit()
+    {
+        try
+        {
+            using (StreamWriter writer = new StreamWriter("expedition_summary.txt"))
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    writer.WriteLine(fullData[i]); // write full artifact line
+                }
+            }
+            Console.WriteLine("Data saved successfully. Exiting program.");
+        }
+        catch
+        {
+            Console.WriteLine("Error saving file.");
+        }
+    }
+
+
 }
