@@ -27,7 +27,6 @@ class SpaceExpedition
         DecodeAllNames();
         DisplayDecodedNames();
     }
-    // tryih t uallint the main it work ot nog 
     static void LoadVault()
     {
         try
@@ -56,10 +55,6 @@ class SpaceExpedition
             Console.WriteLine("Error reading galactic_vault.txt");
         }
     }
-
-    // =========================
-    // STEP 2 CONTROLLER METHOD
-    // =========================
     static void DecodeAllNames()
     {
         for (int i = 0; i < count; i++)
@@ -68,9 +63,6 @@ class SpaceExpedition
         }
     }
 
-    // =========================
-    // RECURSIVE CHARACTER DECODE
-    // =========================
     static char DecodeChar(char ch, int level)
     {
         if (level == 0)
@@ -91,10 +83,6 @@ class SpaceExpedition
 
         return DecodeChar(next, level - 1);
     }
-
-    // =========================
-    // DECODE FULL NAME
-    // =========================
     static string DecodeName(string encoded)
     {
         string result = "";
@@ -113,15 +101,27 @@ class SpaceExpedition
 
         return result;
     }
-
-    // =========================
-    // DISPLAY METHOD (CHECK)
-    // =========================
     static void DisplayDecodedNames()
     {
         for (int i = 0; i < count; i++)
         {
             Console.WriteLine(encodedNames[i] + " -> " + decodedNames[i]);
+        }
+    }
+    static void SortArtifacts()
+    {
+        for (int i = 1; i < count; i++)
+        {
+            string key = decodedNames[i];
+            int j = i - 1;
+
+            while (j >= 0 && string.Compare(decodedNames[j], key) > 0)
+            {
+                decodedNames[j + 1] = decodedNames[j];
+                j--;
+            }
+
+            decodedNames[j + 1] = key;
         }
     }
 }
