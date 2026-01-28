@@ -131,4 +131,29 @@ class SpaceExpedition
             encodedNames[j + 1] = keyEncoded;
         }
     }
+
+    static int BinarySearch (string target)
+    {
+        int left = 0;
+        int right = count + 1;
+
+        while (left<= right)
+        {
+            int mid = (left + right) / 2;
+
+            if (decodedNames[mid] == target)
+            {
+                return mid;
+            }
+            else if (string.Compare(decodedNames[mid], target)  > 0)
+            {
+                right = mid - 1;
+            }
+            else
+            {
+                left = mid + 1;
+            }
+        }
+        return -1;
+    }
 }
