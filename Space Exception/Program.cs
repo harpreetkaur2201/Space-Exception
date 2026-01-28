@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography;
 
 class SpaceExpedition
 {
@@ -118,12 +117,13 @@ class SpaceExpedition
         {
             string keyDecoded = decodedNames[i];
             string keyEncoded = encodedNames[i];
-            
+
             int j = i - 1;
 
-            while (j >= 0 && string.Compare(decodedNames[j], key) > 0)
+            while (j >= 0 && string.Compare(decodedNames[j], keyDecoded) > 0)
             {
                 decodedNames[j + 1] = decodedNames[j];
+                encodedNames[j + 1] = encodedNames[j];
                 j--;
             }
 
@@ -132,12 +132,13 @@ class SpaceExpedition
         }
     }
 
-    static int BinarySearch (string target)
+
+    static int BinarySearch(string target)
     {
         int left = 0;
-        int right = count + 1;
+        int right = count - 1;
 
-        while (left<= right)
+        while (left <= right)
         {
             int mid = (left + right) / 2;
 
@@ -145,7 +146,7 @@ class SpaceExpedition
             {
                 return mid;
             }
-            else if (string.Compare(decodedNames[mid], target)  > 0)
+            else if (string.Compare(decodedNames[mid], target) > 0)
             {
                 right = mid - 1;
             }
@@ -154,8 +155,10 @@ class SpaceExpedition
                 left = mid + 1;
             }
         }
+
         return -1;
     }
+
 
     static void InsertArtifacts(string newEncoded, string newDecoded)
     {
@@ -166,7 +169,7 @@ class SpaceExpedition
             position++;
         }
 
-        for (int i = count; i>position; i-- )
+        for (int i = count; i > position; i-- )
         {
             encodedNames[i] = encodedNames[i - 1];
             decodedNames[i] = decodedNames[i - 1];
