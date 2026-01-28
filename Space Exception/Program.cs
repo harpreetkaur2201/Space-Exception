@@ -50,7 +50,7 @@ class SpaceExpedition
                     continue;
 
                 encodedNames[count] = parts[0].Trim();
-                fullData[count] = line; // store full line
+                fullData[count] = line; 
                 count++;
 
                 if (count >= 80)

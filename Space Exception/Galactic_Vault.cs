@@ -46,7 +46,6 @@ namespace Space_Expedition
 
             Artifact art = new Artifact(encoded, fullLine);
 
-            // Check for duplicate
             for (int i = 0; i < count; i++)
                 if (artifacts[i].DecodedName == art.DecodedName)
                 {
@@ -54,7 +53,6 @@ namespace Space_Expedition
                     return;
                 }
 
-            // Insert sorted by DecodedName
             int pos = 0;
             while (pos < count && string.Compare(artifacts[pos].DecodedName, art.DecodedName) < 0)
                 pos++;
