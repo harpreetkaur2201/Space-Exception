@@ -156,4 +156,25 @@ class SpaceExpedition
         }
         return -1;
     }
+
+    static void InsertArtifacts(string newEncoded, string newDecoded)
+    {
+        int position = 0;
+
+        while (position < count && string.Compare(decodedNames[position], newDecoded) <0)
+        {
+            position++;
+        }
+
+        for (int i = count; i>position; i-- )
+        {
+            encodedNames[i] = encodedNames[i - 1];
+            decodedNames[i] = decodedNames[i - 1];
+        }
+
+        encodedNames[position] = newEncoded;
+        decodedNames[position] = newDecoded;
+
+        count++;
+    }
 }
