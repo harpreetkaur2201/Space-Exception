@@ -232,7 +232,7 @@ class SpaceExpedition
             return;
         }
 
-        InsertArtifact(encoded, decoded, fullLine); // note full line added
+        InsertArtifact(encoded, decoded, fullLine); 
         Console.WriteLine("Artifact added successfully.");
     }
     static void SaveAndExit()
@@ -243,7 +243,7 @@ class SpaceExpedition
             {
                 for (int i = 0; i < count; i++)
                 {
-                    writer.WriteLine(fullData[i]); // write full artifact line
+                    writer.WriteLine(fullData[i]); 
                 }
             }
             Console.WriteLine("Data saved successfully. Exiting program.");
