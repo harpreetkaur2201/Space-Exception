@@ -1,64 +1,127 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
 
 class SpaceExpedition
 {
+    
+    static string[] encodedNames = new string[80];
+    static string[] decodedNames = new string[80];
+    static int count = 0;
+
+   
+    static char[] original = {
+        'A','B','C','D','E','F','G','H','I','J','K','L','M',
+        'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    };
+
+    static char[] mapped = {
+        'H','Z','A','U','Y','E','K','G','O','T','I','R','J',
+        'V','W','N','M','F','Q','S','D','B','X','L','C','P'
+    };
+
+ 
     static void Main()
     {
-        // Arrays to store artifact data (maximum 80)
-        string[] encodedNames = new string[80];
-        string[] planets = new string[80];
-        string[] discoveryDates = new string[80];
-        string[] storageLocations = new string[80];
-        string[] descriptions = new string[80];
-
-        int count = 0; // number of artifacts loaded
-
+        LoadVault();
+        DecodeAllNames();
+        DisplayDecodedNames();
+    }
+    // tryih t uallint the main it work ot nog 
+    static void LoadVault()
+    {
         try
         {
             string[] lines = File.ReadAllLines("galactic_vault.txt");
 
             for (int i = 0; i < lines.Length; i++)
             {
-                // skip empty lines
                 if (lines[i].Trim() == "")
-                {
                     continue;
-                }
 
                 string[] parts = lines[i].Split('|');
 
-                // skip wrong lines
                 if (parts.Length < 5)
-                {
                     continue;
-                }
 
                 encodedNames[count] = parts[0].Trim();
-                planets[count] = parts[1].Trim();
-                discoveryDates[count] = parts[2].Trim();
-                storageLocations[count] = parts[3].Trim();
-                descriptions[count] = parts[4].Trim();
-
                 count++;
 
                 if (count == 80)
-                {
                     break;
-                }
             }
-
-            Console.WriteLine("Artifacts loaded: " + count);
         }
         catch
         {
-            Console.WriteLine("Error: Could not read galactic_vault.txt");
+            Console.WriteLine("Error reading galactic_vault.txt");
         }
+    }
 
-        // simple check (optional)
+    // =========================
+    // STEP 2 CONTROLLER METHOD
+    // =========================
+    static void DecodeAllNames()
+    {
         for (int i = 0; i < count; i++)
         {
-            Console.WriteLine(encodedNames[i] + " | " + planets[i]);
+            decodedNames[i] = DecodeName(encodedNames[i]);
+        }
+    }
+
+    // =========================
+    // RECURSIVE CHARACTER DECODE
+    // =========================
+    static char DecodeChar(char ch, int level)
+    {
+        if (level == 0)
+        {
+            return (char)('Z' - (ch - 'A'));
+        }
+
+        char next = ch;
+
+        for (int i = 0; i < 26; i++)
+        {
+            if (original[i] == ch)
+            {
+                next = mapped[i];
+                break;
+            }
+        }
+
+        return DecodeChar(next, level - 1);
+    }
+
+    // =========================
+    // DECODE FULL NAME
+    // =========================
+    static string DecodeName(string encoded)
+    {
+        string result = "";
+
+        for (int i = 0; i < encoded.Length; i++)
+        {
+            if (char.IsLetter(encoded[i]))
+            {
+                char letter = encoded[i];
+                int level = encoded[i + 1] - '0';
+
+                result += DecodeChar(letter, level);
+                i++;
+            }
+        }
+
+        return result;
+    }
+
+    // =========================
+    // DISPLAY METHOD (CHECK)
+    // =========================
+    static void DisplayDecodedNames()
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Console.WriteLine(encodedNames[i] + " -> " + decodedNames[i]);
         }
     }
 }
