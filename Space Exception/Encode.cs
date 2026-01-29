@@ -29,8 +29,7 @@ namespace Space_Expedition
             }
             return result;
         }
-
-        private static char DecodeChar(char ch, int level)
+            private static char DecodeChar(char ch, int level)
         {
             if (level == 0)
                 return (char)('Z' - (ch - 'A'));
