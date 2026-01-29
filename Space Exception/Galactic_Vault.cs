@@ -3,17 +3,17 @@ using System.IO;
 
 namespace Space_Expedition
 {
-    internal class Galactic_Vault
+    internal class GalacticVault
     {
         private Artifact[] artifacts = new Artifact[80];
         private int count = 0;
 
-        // Load artifacts from galactic_vault.txt on program start
+        // Load artifacts from file on startup
         public void LoadVault()
         {
             if (!File.Exists("galactic_vault.txt"))
             {
-                Console.WriteLine("Vault file not found! Starting with empty inventory.");
+                Console.WriteLine("Vault file not found! Starting empty.");
                 return;
             }
 
@@ -23,37 +23,37 @@ namespace Space_Expedition
                 foreach (string line in lines)
                 {
                     string[] parts = line.Split('|');
-                    if (parts.Length < 5) continue; // skip invalid lines
+                    if (parts.Length < 5) continue;
 
-                    AddArtifact(parts[0], line, false, false); // don't show message, don't save again
+                    AddArtifact(parts[0], line, false); 
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("Error reading galactic_vault.txt: " + ex.Message);
+                Console.WriteLine("Error reading galactic_vault.txt");
             }
         }
 
-        // Add an artifact to the vault
-        public void AddArtifact(string encoded, string fullLine, bool showMessage = true, bool saveToFile = true)
+        // Add artifact, show decoded mapping + full vault optionally
+        public void AddArtifact(string encoded, string fullLine, bool showMessage = true)
         {
             if (count >= 80)
             {
-                if (showMessage) Console.WriteLine("Cannot add more artifacts. Vault is full.");
+                if (showMessage) Console.WriteLine("Vault full. Cannot add more artifacts.");
                 return;
             }
 
             Artifact art = new Artifact(encoded, fullLine);
 
-            // Check for duplicates by DecodedName
+            // Prevent duplicates
             for (int i = 0; i < count; i++)
                 if (artifacts[i].DecodedName == art.DecodedName)
                 {
-                    if (showMessage) Console.WriteLine("Artifact already exists in the vault.");
+                    if (showMessage) Console.WriteLine("Artifact already exists.");
                     return;
                 }
 
-            // Insert in sorted order by DecodedName
+            // Insert in sorted order
             int pos = 0;
             while (pos < count && string.Compare(artifacts[pos].DecodedName, art.DecodedName) < 0)
                 pos++;
@@ -64,24 +64,30 @@ namespace Space_Expedition
             artifacts[pos] = art;
             count++;
 
-            if (showMessage) Console.WriteLine("Artifact added successfully.");
-
-            // Save immediately to galactic_vault.txt
-            if (saveToFile)
+            if (showMessage)
             {
-                try
-                {
-                    File.AppendAllText("galactic_vault.txt", fullLine + Environment.NewLine);
-                }
-                catch
-                {
-                    Console.WriteLine("Error saving artifact to file.");
-                }
+                Console.WriteLine("Artifact added successfully.");
+                Console.WriteLine($"{art.EncodedName} -> {art.DecodedName}");
+
+                // Show full vault so far
+                Console.WriteLine("\n--- Current Vault ---");
+                for (int i = 0; i < count; i++)
+                    Console.WriteLine(artifacts[i].FullData);
+            }
+
+            // Save to file exactly as entered
+            try
+            {
+                File.AppendAllText("galactic_vault.txt", fullLine);
+            }
+            catch
+            {
+                Console.WriteLine("Error saving artifact to file.");
             }
         }
 
-        // Display all artifacts in memory
-        public void DisplayArtifacts()
+        // Display full artifact lines (for option 2)
+        public void DisplayFullInventory()
         {
             if (count == 0)
             {
@@ -90,25 +96,7 @@ namespace Space_Expedition
             }
 
             for (int i = 0; i < count; i++)
-                Console.WriteLine($"{artifacts[i].EncodedName} -> {artifacts[i].DecodedName}");
-        }
-
-        // Optional: save all artifacts at once
-        public void SaveVault()
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter("galactic_vault.txt"))
-                {
-                    for (int i = 0; i < count; i++)
-                        writer.WriteLine(artifacts[i].FullData);
-                }
-                Console.WriteLine("Vault saved successfully.");
-            }
-            catch
-            {
-                Console.WriteLine("Error saving vault.");
-            }
+                Console.WriteLine(artifacts[i].FullData);
         }
     }
 }
