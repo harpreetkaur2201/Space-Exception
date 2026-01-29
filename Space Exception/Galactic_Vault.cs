@@ -79,7 +79,6 @@ namespace Space_Expedition
                 Console.WriteLine("Error saving artifact to file.");
             }
         }
-
         public void DisplayFullInventory()
         {
             if (count == 0)
