@@ -26,7 +26,7 @@ namespace Space_Expedition
                         AddArtifactFromUser(vault);
                         break;
                     case "2":
-                        vault.DisplayFullInventory();
+                        galacticVault.DisplayFullInventory();
                         break;
                     case "3":
                         running = false;
