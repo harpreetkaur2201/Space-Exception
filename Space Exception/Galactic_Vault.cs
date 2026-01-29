@@ -24,7 +24,7 @@ namespace Space_Expedition
                     string[] parts = line.Split('|');
                     if (parts.Length < 5) continue;
 
-                    AddArtifact(parts[0], line, false); 
+                    AddArtifact(parts[0], line, false);
                 }
             }
             catch

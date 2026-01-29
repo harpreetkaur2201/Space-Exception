@@ -14,7 +14,7 @@ namespace Space_Expedition
             {
                 Console.WriteLine("\n--- Galactic Vault Menu ---");
                 Console.WriteLine("1. Add Artifact");
-                Console.WriteLine("2. View Inventory ");
+                Console.WriteLine("2. View Inventory");
                 Console.WriteLine("3. Exit");
                 Console.Write("Choose an option: ");
 
@@ -26,7 +26,7 @@ namespace Space_Expedition
                         AddArtifactFromUser(vault);
                         break;
                     case "2":
-                        galacticVault.DisplayFullInventory();
+                        vault.DisplayFullInventory(); 
                         break;
                     case "3":
                         running = false;
@@ -51,7 +51,7 @@ namespace Space_Expedition
                 return;
             }
 
-            Console.Write("Enter full artifact line (encoded|planet|date|location|desc): ");
+            Console.Write("Enter full artifact line (encoded|planet|date|location|desc|material|value|condition): ");
             string fullLine = Console.ReadLine()?.Trim() ?? "";
 
             vault.AddArtifact(encoded, fullLine);
